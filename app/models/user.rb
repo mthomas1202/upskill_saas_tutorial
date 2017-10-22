@@ -7,6 +7,12 @@ class User < ApplicationRecord
   belongs_to :plan
   
   attr_accessor :stripe_card_token
+  
+  #If Pro User passes validations (email, password, etc.)
+  #then call Stripe and tell Stripe to set up a subscription
+  #upon charging a customers card.
+  #Stripe responds back with customer data
+  #Store customer.id as customer token.
   def save_with_subscription
     if valid?
       customer = Stripe::Customer.create(description: email, plan: plan_id, source: stripe_card_token)
